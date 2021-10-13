@@ -29,12 +29,16 @@ public class BookService {
         return newBook;
     }
     public String deleteBook(int bookid){
-        Book deleteBook = bookRepository.findById(bookid).get();
-        try{
-            bookRepository.delete(deleteBook);
-            return "Deleted Successfully";
-        }catch (Exception exception){
-            return "Delete failed";
+        Optional<Book> deleteBook = bookRepository.findById(bookid);
+        if(deleteBook.isEmpty()){
+            return "Delete failed: No book with this Id";
+        }else{
+            try{
+                bookRepository.delete(deleteBook.get());
+                return "Deleted Successfully";
+            }catch (Exception exception){
+                return "Delete failed: Unknown";
+            }
         }
     }
     public Book updateBook(Book book){
